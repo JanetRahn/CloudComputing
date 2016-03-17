@@ -1,0 +1,21 @@
+body{
+	background-color:grey; 
+}
+
+h1{
+	font-family: arial, sans-serif;
+	color: white; 
+	text-align:center; 
+}
+form{
+	text-align:center;
+}
+
+#content{
+	position:absolute;
+	width:800px;
+	height:200px;
+	left:50%;
+	top: 25%;
+	margin-left:-400px;
+}
