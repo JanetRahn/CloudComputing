@@ -7,8 +7,28 @@ h1{
 	color: white; 
 	text-align:center; 
 }
+
+h2{
+	position:absolute;
+		width:800px;
+	height:200px;
+	left:50%;
+	top: 19%;
+	margin-left:-400px;
+	font-family: arial, sans-serif;
+	color: white; 
+	text-align:center; 
+
+}
+
 form{
 	text-align:center;
+}
+
+#test{
+	position:absolute;
+	width: 108%;
+	margin-top:15px;
 }
 
 #content{
