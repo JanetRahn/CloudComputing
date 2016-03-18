@@ -1,4 +1,4 @@
-//Variablen die auf JS-Dateien "zeigen" (Einbindung in das Projekt)
+//Bibliotheken werden importiert und sind während der Laufzeit verfügbar
 var server = require("./server"); 
 var router = require("./router");
 var requestHandlers = require("./requestHandlersLogin");

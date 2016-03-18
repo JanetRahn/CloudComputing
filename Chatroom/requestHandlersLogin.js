@@ -9,7 +9,7 @@ var fs = require('fs');
 
 function start(response, postData) {
 	console.log("Request handler 'start' was called.");
-	fs.readFile('./view/html/login.html', function(err, html) {
+	fs.readFile('./view/login.html', function(err, html) {
 		if (err) {
 			throw err;
 		}
