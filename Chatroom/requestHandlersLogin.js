@@ -18,6 +18,7 @@ function start(response, postData) {
 		});
 		response.write(html);
 		response.end();
+	
 	});
 }
 /**
@@ -27,9 +28,16 @@ function start(response, postData) {
  */
 // Nach dem Clicken auf den Button
 function joinChat(response, postData) {
-	response.writeHead(200, {"Content-Type" : "text/plain"});
-	response.write("You've sent the text: " + querystring.parse(postData).username);
-	response.end();
+	fs.readFile('./view/chat.html', function(err, html) {
+		if (err) {
+			throw err;
+		}
+		response.writeHead(200, {
+			"Content-Type" : "text/html",
+		});
+		response.write(html);
+		response.end();
+	});
 }
 
 exports.start = start;

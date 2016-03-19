@@ -2,18 +2,31 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="styles.css">
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+	var socketio = io.connect("127.0.0.1:8888");
+	socketio.on("message_to_client", function(message_to_client) {
+			document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.message ;
+			var element = document.getElementById("chat");
+			element.scrollTop = element.scrollHeight;
+	});
+	
+	function sendMessage() {
+		var msg = document.getElementById("text").value;
+		document.getElementById("text").value = "";
+		socketio.emit("message_to_server", {message : msg
+	});
+	}
+</script>
 </head>
 
 <body>
 	<h2>Willkommen im Chatroom</h2>
 	<div id="content">
-		<form action="/joinChat" method="post">
-			<textarea name="chat" rows="30" cols="120"></textarea>
-			<div id="test">
-				<input type="text" name="message" size="90"></input> <input
-					type="submit" value="Chat beitreten" />
-			</div>
-		</form>
+			<div id="chat"></div>
+			<input type="text" id="text" name="message"></input> 
+			<button onclick="sendMessage()">Senden</button>
 	</div>
 </body>
 </html>

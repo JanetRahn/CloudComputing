@@ -1,41 +1,60 @@
-body{
-	background-color:grey; 
+body {
+	background-color: grey;
 }
 
-h1{
+h1 {
 	font-family: arial, sans-serif;
-	color: white; 
-	text-align:center; 
+	color: white;
+	text-align: center;
 }
 
-h2{
-	position:absolute;
-		width:800px;
-	height:200px;
-	left:50%;
-	top: 19%;
-	margin-left:-400px;
-	font-family: arial, sans-serif;
-	color: white; 
-	text-align:center; 
+#chat{
+	background-color: white; 
+	width: 99.5%;
+	height: 205%;
+	margin-top:2%;
+	overflow: auto;
+}
 
+input{
+	margin-top:2%;
+}
+
+input[type=text] {
+	border: 0;
+	padding: 10px;
+	width: 90%;
+	text-align: left;
+}
+
+input[type=submit]{
+	width: 9%;
+	background: white;
+	color:grey; 
+	border: none;
+	padding: 10px;
 }
 
 form{
-	text-align:center;
+	    width: 108.2%;
+}
+h2 {
+	position: absolute;
+	width: 800px;
+	height: 200px;
+	left: 50%;
+	top: 19%;
+	margin-left: -400px;
+	font-family: arial, sans-serif;
+	color: white;
+	text-align: center;
 }
 
-#test{
-	position:absolute;
-	width: 108%;
-	margin-top:15px;
-}
-
-#content{
-	position:absolute;
-	width:800px;
-	height:200px;
-	left:50%;
+#content {
+	position: absolute;
+	width: 800px;
+	height: 200px;
+	left: 50%;
 	top: 25%;
-	margin-left:-400px;
+	margin-left: -400px;
 }
