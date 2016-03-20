@@ -1,7 +1,8 @@
 var http = require("http"); 
 var url = require("url");
-
-
+var users = [];
+var log = [];
+var debug = require('debug'); //Debug
 /**
  * Startet den Server und überprüft, ob Anfragen gestellt werden
  * 
@@ -36,18 +37,34 @@ function start(route, handle) {
   var app = http.createServer(onRequest).listen(8888);
   var io = require('socket.io')(app);
   
-//  var handleClient = function(socket){
-//	  socket.emit("message_to_client", {user: "nodesource", text: "Hello" });
-//  };
-//  
-//  io.on("connection", handleClient);
-//  
 
+//  io.sockets.on('connect', function(client) {
+//	    clients.push(client); 
+//
+//	    client.on('disconnect', function() {
+//	        clients.splice(clients.indexOf(client), 1);
+//	    });
+//	});
+  
   io.sockets.on('connection', function(socket) {
 	  console.log("user connected");
-      socket.on('message_to_server', function(data) {
-          io.sockets.emit('message_to_client',{ message: data['message'] });
+	  
+	//speichert user in socket-Session
+      socket.on('adduser', function (username) {
+          socket.username = username;
+          users[username] = username;
+          console.log(socket.username);
+
       });
+	  
+      socket.on('message_to_server', function (data) {
+          //username kann nicht aus Session abgerufen werden warum auch immer.
+          console.log(socket.username + ': ' + data['message']);
+        //  io.sockets.emit('message_to_client', {message: data['message'], username: socket.user});
+          io.sockets.emit('message_to_client', {message : data['message'], username:socket.username
+          });
+      });
+      
       socket.on('disconnect', function(socket){
     		 console.log("user disconnected"); 
     	  });

@@ -7,7 +7,7 @@
 <script type="text/javascript">
 	var socketio = io.connect("127.0.0.1:8888");
 	socketio.on("message_to_client", function(message_to_client) {
-			document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.message ;
+		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.messageusername + ': ' + message_to_client.message;
 			var element = document.getElementById("chat");
 			element.scrollTop = element.scrollHeight;
 	});

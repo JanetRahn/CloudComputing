@@ -2,14 +2,27 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="styles.css">
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('http://localhost:8888');
+
+	function sendMessage() {
+		var user = document.getElementById("username").value;
+		console.log(user);
+		socket.emit("adduser", {
+			user : user
+		});
+	}
+</script>
 </head>
 
 <body>
 	<div id="content">
 		<h1>Chatroom</h1>
-		<form action="/joinChat" method="post">
-			<input type="text" name="username" placeholder="Username" /> <input type="submit"
-				value="Chat beitreten" />
+		<form action="/joinChat" method="post" onsubmit="sendMessage()">
+			<input type="text" id="username" name="username" placeholder="Username" /> <input
+				type="submit" value="Chat beitreten" />
 		</form>
 	</div>
 </body>
