@@ -44,10 +44,16 @@ function start(route, handle) {
 //  
 
   io.sockets.on('connection', function(socket) {
+	  console.log("user connected");
       socket.on('message_to_server', function(data) {
           io.sockets.emit('message_to_client',{ message: data['message'] });
       });
+      socket.on('disconnect', function(socket){
+    		 console.log("user disconnected"); 
+    	  });
   });
+  
+ 
   
   io.listen(app);
   console.log("-----------------------------------------------------");
