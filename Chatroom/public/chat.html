@@ -1,13 +1,27 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	var socketio = io.connect("127.0.0.1:8888");
+	
+	window.onload = init;
+	
+	function init(){
+		socketio.emit('infoUser', localStorage.getItem('username'));
+	}
+	
 	socketio.on("message_to_client", function(message_to_client) {
-		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.messageusername + ': ' + message_to_client.message;
+		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.username + ': ' + message_to_client.message;
+			var element = document.getElementById("chat");
+			element.scrollTop = element.scrollHeight;
+	});
+	
+	socketio.on('servermessage', function(msg) {
+		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/><b>" + msg + '</b>';
 			var element = document.getElementById("chat");
 			element.scrollTop = element.scrollHeight;
 	});
@@ -15,8 +29,7 @@
 	function sendMessage() {
 		var msg = document.getElementById("text").value;
 		document.getElementById("text").value = "";
-		socketio.emit("message_to_server", {message : msg
-	});
+		socketio.emit("chatmessage", msg);
 	}
 </script>
 </head>
