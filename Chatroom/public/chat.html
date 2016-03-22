@@ -7,39 +7,60 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	var socketio = io.connect("127.0.0.1:8888");
-	
+
 	window.onload = init;
-	
-	function init(){
+
+	function init() {
 		socketio.emit('infoUser', localStorage.getItem('username'));
 	}
-	
-	socketio.on("message_to_client", function(message_to_client) {
-		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/>" + message_to_client.username + ': ' + message_to_client.message;
-			var element = document.getElementById("chat");
-			element.scrollTop = element.scrollHeight;
+
+	socketio.on("message_to_clients", function(message_to_clients) {
+		var zeit = new Date(message_to_clients.zeit);
+		document.getElementById("content").innerHTML = (document
+				.getElementById("content").innerHTML)
+				+ "<li>"
+				+ "["
+				+ (zeit.getHours() < 10 ? '0' + zeit.getHours() : zeit
+						.getHours())
+				+ ':'
+				+ (zeit.getMinutes() < 10 ? '0' + zeit.getMinutes() : zeit
+						.getMinutes())
+				+ "] "
+				+ message_to_clients.username
+				+ ': ' + message_to_clients.message + "</li>";
+		var element = document.getElementById("content");
+		element.scrollTop = element.scrollHeight;
 	});
-	
+
 	socketio.on('servermessage', function(msg) {
-		document.getElementById("chat").innerHTML = ( document.getElementById("chat").innerHTML) + "<hr/><b>" + msg + '</b>';
-			var element = document.getElementById("chat");
-			element.scrollTop = element.scrollHeight;
+		document.getElementById("content").innerHTML = (document
+				.getElementById("content").innerHTML)
+				+ "<li>" + "<b>" + msg + '</b>' + "</li>";
+
+		var element = document.getElementById("content");
+		element.scrollTop = element.scrollHeight;
 	});
-	
+
 	function sendMessage() {
 		var msg = document.getElementById("text").value;
 		document.getElementById("text").value = "";
 		socketio.emit("chatmessage", msg);
 	}
+	
+	 $('#text').keypress(function (e) {
+	        if (e.which == 13) {
+	            senden();
+	        }
+	    });
 </script>
 </head>
-
 <body>
-	<h2>Willkommen im Chatroom</h2>
-	<div id="content">
-			<div id="chat"></div>
-			<input type="text" id="text" name="message"></input> 
-			<button onclick="sendMessage()">Senden</button>
-	</div>
+	<header>Cloud Computing Node.JS Chat</header>
+	<ul id="content">
+	</ul>
+	<footer>
+		<input type="text" id="text" name="message"></input> <input
+			id="senden" type="submit" value="senden" onclick="sendMessage()" />
+	</footer>
 </body>
 </html>

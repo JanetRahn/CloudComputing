@@ -1,5 +1,59 @@
-body {
+header, footer {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: auto;
+	padding: 0 0.5em;
 	background-color: grey;
+	font-size: 24px;
+	line-height: 2em;
+	height: 2em;
+	color: white;
+}
+
+submit {
+	display: block;
+	position: fixed;
+	right: 0;
+}
+
+header {
+	font-weight: bold;
+}
+
+header>a:last-child {
+	float: right;
+	color: #fff;
+	font-weight: normal;
+}
+
+footer {
+	top: auto;
+	bottom: 0;
+}
+
+#text {
+	/* display: block; */
+	/* position: absolute; */
+	/* left: 10px; */
+	right: 10px;
+	margin-top: 10px;
+	color: grey;
+	width: 100%;
+}
+
+#senden {
+	position: fixed;
+	bottom: 10px;
+	right: 8px;
+	color: grey;
+}
+
+#content {
+	margin: 80px 0.5em;
+	list-style: none;
 }
 
 h1 {
@@ -8,53 +62,6 @@ h1 {
 	text-align: center;
 }
 
-#chat{
-	background-color: white; 
-	width: 99.5%;
-	height: 205%;
-	margin-top:2%;
-	overflow: auto;
-}
-
-input{
-	margin-top:2%;
-}
-
-input[type=text] {
-	border: 0;
-	padding: 10px;
-	width: 90%;
-	text-align: left;
-}
-
-input[type=submit]{
-	width: 9%;
-	background: white;
-	color:grey; 
-	border: none;
-	padding: 10px;
-}
-
-form{
-	    width: 108.2%;
-}
-h2 {
-	position: absolute;
-	width: 800px;
-	height: 200px;
-	left: 50%;
-	top: 19%;
-	margin-left: -400px;
-	font-family: arial, sans-serif;
-	color: white;
-	text-align: center;
-}
-
-#content {
-	position: absolute;
-	width: 800px;
-	height: 200px;
-	left: 50%;
-	top: 25%;
-	margin-left: -400px;
+ul>li {
+	margin-top: 10px;
 }
