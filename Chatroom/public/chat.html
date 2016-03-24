@@ -7,29 +7,41 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	var socketio = io.connect("127.0.0.1:8888");
-
+	var privateMessage = "Private Message an";
+	
 	window.onload = init;
 
 	function init() {
 		socketio.emit('infoUser', localStorage.getItem('username'));
+		$('.text').keypress(function (e) {
+	        if (e.which == 13) {
+	            sendMessage();
+	        }
+	    });
+		$(".text").keyup(function() {
+		    if (!this.value) {
+		    	$('.text').attr('style','border-color: ');
+		    }
+		});
 	}
 
-	socketio.on("message_to_clients", function(message_to_clients) {
-		var zeit = new Date(message_to_clients.zeit);
-		document.getElementById("content").innerHTML = (document
-				.getElementById("content").innerHTML)
-				+ "<li>"
-				+ "["
-				+ (zeit.getHours() < 10 ? '0' + zeit.getHours() : zeit
-						.getHours())
-				+ ':'
-				+ (zeit.getMinutes() < 10 ? '0' + zeit.getMinutes() : zeit
-						.getMinutes())
-				+ "] "
-				+ message_to_clients.username
-				+ ': ' + message_to_clients.message + "</li>";
-		var element = document.getElementById("content");
-		element.scrollTop = element.scrollHeight;
+	socketio.on("message_to_client", function(message_to_clients) {
+	var zeit = new Date(message_to_clients.zeit);
+	document.getElementById("content").innerHTML = (document
+			.getElementById("content").innerHTML)
+			+ "<li>"
+			+ "["
+			+ (zeit.getHours() < 10 ? '0' + zeit.getHours() : zeit
+					.getHours())
+			+ ':'
+			+ (zeit.getMinutes() < 10 ? '0' + zeit.getMinutes() : zeit
+					.getMinutes())
+			+ "] "
+			+ message_to_clients.username
+			+ ': ' + message_to_clients.message + "</li>";
+			
+		
+		
 	});
 
 	socketio.on('servermessage', function(msg) {
@@ -40,18 +52,24 @@
 		var element = document.getElementById("content");
 		element.scrollTop = element.scrollHeight;
 	});
+	
+	socketio.on('UserAvailableForPrivateMessage', function(UserAvailableForPrivateMessage){
+		if(UserAvailableForPrivateMessage.available == true && UserAvailableForPrivateMessage.usernameTo !== ""){
+			$('.text').attr('style','border-color: blue');
+			document.getElementById("text").value = privateMessage + " "+ UserAvailableForPrivateMessage.usernameTo + ": "; 
+		}else{
+			
+		}
+	});
 
 	function sendMessage() {
 		var msg = document.getElementById("text").value;
-		document.getElementById("text").value = "";
-		socketio.emit("chatmessage", msg);
+		if(msg != ""){
+			document.getElementById("text").value = "";
+			socketio.emit("chatmessage", msg);
+		}
 	}
 	
-	 $('#text').keypress(function (e) {
-	        if (e.which == 13) {
-	            senden();
-	        }
-	    });
 </script>
 </head>
 <body>
@@ -59,7 +77,7 @@
 	<ul id="content">
 	</ul>
 	<footer>
-		<input type="text" id="text" name="message"></input> <input
+		<input type="text" id="text" class="text" name="message"></input> <input
 			id="senden" type="submit" value="senden" onclick="sendMessage()" />
 	</footer>
 </body>

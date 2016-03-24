@@ -5,6 +5,7 @@ var io = require('socket.io').listen(http);
 var fs = require('fs');
 
 var clients = {};
+var socketIDs;
 
 app.use(express.static(__dirname + '/public'));
 
@@ -20,38 +21,85 @@ http.listen(8888, function() {
 });
 
 io.sockets.on('connection', function(socket) {
-	var items = Object.keys(clients);
-	
+	socketIDs = Object.keys(clients);	
 	
 	socket.on('infoUser', function(username) {
 		clients[socket.id] = username;
-		items = Object.keys(clients);
+		socketIDs = Object.keys(clients);
 		socket.emit('servermessage', 'Welcome to the Chat, ' + username);
 
-		for (var i = 0; i < items.length; i++) {
-			if (items[i] !== socket.id) {
-				io.to(items[i]).emit('servermessage', username + ' betritt den Chat.');
+		for (var i = 0; i < socketIDs.length; i++) {
+			if (socketIDs[i] !== socket.id) {
+				io.to(socketIDs[i]).emit('servermessage', username + ' betritt den Chat.');
+			}
+		}
+	});
+	
+	socket.on('chatmessage', function(message) {
+		console.log('Socket id: ' + socket.id + '  Name: ' + clients[socket.id]	+ '   message: ' + message);
+		var usernameTo = "";
+		if(message.startsWith("/")){
+			var command = message.substring(1, 2);
+			var available = false;
+			switch (command){
+			case "w":
+				usernameTo = message.substr(3);
+				//Leerzeichen löschen 
+				usernameTo = usernameTo.trim(" ");
+				for(var i = 0; i < socketIDs.length; i++){
+					if(usernameTo === clients[socketIDs[i]]){
+						available = true;
+					}
+				}
+				socket.emit('UserAvailableForPrivateMessage', {
+					available : available,
+					usernameTo : usernameTo
+				});
+				available = false; 
+				break;
+			case "o": 
+				console.log("online");
+				break;
+			}
+		}else{
+			if(message.startsWith("Private Message an")){
+				message = message.replace("Private Message an ", "");
+				usernameTo = message.substring(0, message.lastIndexOf(":")); 
+				var tmp = usernameTo + ":";
+				message = message.replace(tmp, "").trim(" ");
+				
+				message = "<span class='privateMessage'>" + message + "<span>";
+				for(var j = 0; j < socketIDs.length; j++){
+					if(usernameTo === clients[socketIDs[j]] || socket.id === clients[socketIDs[j]]){
+						io.to(socketIDs[j]).emit('message_to_client',{
+								zeit : new Date(),
+								message : message,
+								username : clients[socket.id],
+						});
+						socket.emit('message_to_client',{
+						zeit : new Date(),
+						message : message,
+						username : clients[socket.id],
+						});
+					}
+				}
+			}else{
+				io.emit('message_to_client', {
+					zeit : new Date(),
+					message : message,
+					username : clients[socket.id]
+				});
 			}
 		}
 	});
 
-	socket.on('chatmessage', function(message) {
-		console.log('Socket id: ' + socket.id + '  Name: ' + clients[socket.id]	+ '   message: ' + message);
-		io.emit('message_to_clients', {
-			zeit : new Date(),
-			message : message,
-			username : clients[socket.id]
-		});
-	});
-
 	socket.on('disconnect', function(){
-		for(var i = 0; i < items.length; i++){
-			if(socket.id === items[i]){
-				io.emit('servermessage', clients[socket.id] + ' verlässt den Chat.'); 
-			
+		for (var i = 0; i < socketIDs.length; i++) {
+			if (socket.id === socketIDs[i]) {
+				io.emit('servermessage', clients[socket.id] + ' verlässt den Chat.');
+				delete clients[socket.id];
+				socketIDs = Object.keys(clients);
 			}
 		}
 	  });
 });
-
-

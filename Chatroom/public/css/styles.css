@@ -34,6 +34,11 @@ footer {
 	bottom: 0;
 }
 
+.textPrivate{
+	font-weight: bold;
+	color: green;
+}
+
 #text {
 	/* display: block; */
 	/* position: absolute; */
@@ -64,4 +69,10 @@ h1 {
 
 ul>li {
 	margin-top: 10px;
+}
+
+.privateMessage{
+	margin-top: 10px;
+	color: green;
+	font-weight: bold;
 }
