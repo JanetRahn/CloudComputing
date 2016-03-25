@@ -2,19 +2,37 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="../css/styles.css">
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+window.onload = function(){
+	if(window.location.hash == '#error'){
+		document.getElementById("notification").style.visibility="visible";
+	}
+}
+
+$(document).ready(function() {
+    $('#username').keyup(function() {
+    	 var eingabe = document.getElementById("username").value;
+    	 var check = document.getElementById("check");
+    	 if(eingabe.length < 3){
+    		 check.innerHTML = "Username muss größer als 3 Zeichen sein!";
+    	 }else{
+    		 check.innerHTML = "";
+    	 }
+    });
+});
+
 
 function sendMessage() {
+	var test = document.getElementById("username").value;
 	localStorage.setItem('username', document.getElementById('username').value);
 }
 
 </script>
-
 <style>
-body{
-	background-color:grey; 
+body {
+	background-color: grey;
 }
 </style>
 </head>
@@ -22,9 +40,14 @@ body{
 <body>
 	<div id="content">
 		<h1>Chatroom</h1>
-		<form action="/joinChat" method="post" onsubmit="sendMessage()">
-			<input type="text" id="username" name="username" placeholder="Username" /> <input
-				type="submit" value="Chat beitreten" />
+		<form action="/joinChat" id="form" method="post"
+			onsubmit="sendMessage();">
+			<div id="notification">Username in Verwendung</div>
+			
+			<input type="text" for="username" id="username" name="username" placeholder="Username" onkeyup="inputCheck"/> 
+			
+			<input	type="submit" value="Chat beitreten" />
+			<div id="check"></div>
 		</form>
 	</div>
 </body>

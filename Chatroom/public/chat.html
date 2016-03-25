@@ -8,7 +8,7 @@
 <script type="text/javascript">
 	var socketio = io.connect("127.0.0.1:8888");
 	var privateMessage = "Private Message an";
-	
+	var privateMsg = false; 
 	window.onload = init;
 
 	function init() {
@@ -54,11 +54,14 @@
 	});
 	
 	socketio.on('UserAvailableForPrivateMessage', function(UserAvailableForPrivateMessage){
+		alert(UserAvailableForPrivateMessage.available);
 		if(UserAvailableForPrivateMessage.available == true && UserAvailableForPrivateMessage.usernameTo !== ""){
 			$('.text').attr('style','border-color: blue');
+			privateMsg = true; 
 			document.getElementById("text").value = privateMessage + " "+ UserAvailableForPrivateMessage.usernameTo + ": "; 
 		}else{
-			
+			privateMsg = false; 
+			document.getElementById("content").innerHTML = (document.getElementById("content").innerHTML) + "<li>" + "<b>" + UserAvailableForPrivateMessage.usernameTo +  ' nicht vorhanden' + '</b>' + "</li>";
 		}
 	});
 
@@ -66,7 +69,7 @@
 		var msg = document.getElementById("text").value;
 		if(msg != ""){
 			document.getElementById("text").value = "";
-			socketio.emit("chatmessage", msg);
+			socketio.emit("chatmessage", msg, privateMsg);
 		}
 	}
 	
