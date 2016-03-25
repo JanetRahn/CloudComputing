@@ -12,18 +12,23 @@ window.onload = function(){
 }
 
 $(document).ready(function() {
-    $('#username').keyup(function() {
+	$('#submit').attr("disabled",true);
+    $('#username').keyup(function (e) {
     	 var eingabe = document.getElementById("username").value;
     	 var check = document.getElementById("check");
     	 if(eingabe.length < 3){
     		 check.innerHTML = "Username muss größer als 3 Zeichen sein!";
+    		 $('#submit').attr("disabled",true);
+    	 }else if(e.which === 32 || eingabe.match(" ")){
+    		 $('#submit').attr("disabled",true);
+    		 check.innerHTML = "Username darf kein Leerzeichen enthalten";
+    		 
     	 }else{
     		 check.innerHTML = "";
+    		 $('#submit').attr("disabled",false);
     	 }
     });
 });
-
-
 function sendMessage() {
 	var test = document.getElementById("username").value;
 	localStorage.setItem('username', document.getElementById('username').value);
@@ -44,9 +49,9 @@ body {
 			onsubmit="sendMessage();">
 			<div id="notification">Username in Verwendung</div>
 			
-			<input type="text" for="username" id="username" name="username" placeholder="Username" onkeyup="inputCheck"/> 
+			<input type="text" for="username" id="username" name="username" placeholder="Username"/> 
 			
-			<input	type="submit" value="Chat beitreten" />
+			<input	id="submit" type="submit" value="Chat beitreten" />
 			<div id="check"></div>
 		</form>
 	</div>
