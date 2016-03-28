@@ -44,9 +44,9 @@ footer {
 	bottom: 0;
 }
 
-.textPrivate {
-	font-weight: bold;
-	color: green;
+.onlineList{
+	color: green; 
+	font-weight: bold; 
 }
 
 #text {

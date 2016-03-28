@@ -39,9 +39,6 @@
 			+ "] "
 			+ message_to_clients.username
 			+ ': ' + message_to_clients.message + "</li>";
-			
-		
-		
 	});
 
 	socketio.on('servermessage', function(msg) {
@@ -54,7 +51,6 @@
 	});
 	
 	socketio.on('UserAvailableForPrivateMessage', function(UserAvailableForPrivateMessage){
-		alert(UserAvailableForPrivateMessage.available);
 		if(UserAvailableForPrivateMessage.available == true && UserAvailableForPrivateMessage.usernameTo !== ""){
 			$('.text').attr('style','border-color: blue');
 			privateMsg = true; 
