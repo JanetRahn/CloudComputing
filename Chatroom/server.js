@@ -87,8 +87,9 @@ io.sockets.on('connection', function(socket) {
 	 */
 	socket.on('infoUser', function(username) {
 		clients[socket.id] = username;
+		console.log(username);
 		socketIDs = Object.keys(clients);
-		socket.emit('servermessage', 'Welcome to the Chat, ' + username +"<br> <font color='#7BF954'><i> Info: Um eine private Nachricht zu schreiben, schreibe '/w Username' [Enter], <br> um zu überprüfen wer im Moment online ist, tippe '/o' </i></font>");
+		socket.emit('servermessage', 'Welcome to the Chat, ' + username +"<br> <font color='#7BF954'><i> Info: Um eine private Nachricht zu schreiben, schreibe '/priv Username' [Enter], <br> um zu überprüfen wer im Moment online ist, tippe '/list' </i></font>");
 
 		for (var i = 0; i < socketIDs.length; i++) {
 			if (socketIDs[i] !== socket.id) {
@@ -100,24 +101,26 @@ io.sockets.on('connection', function(socket) {
 
 	/**
 	 * chatmessage: überprüft Nachrichten, ob es ein Kommando ist oder eine
-	 * normale Chatnachricht an alle. Wird als Kommando "/w username" eingegeben
+	 * normale Chatnachricht an alle. Wird als Kommando "/priv username" eingegeben
 	 * so erhält der User in seinem Textfeld ein Feedback-Text, an wen die
 	 * Nachricht geht. Danach kann dieser seine Nachricht direkt hinter diesem
 	 * Text eingeben und abschicken. Überprüft wird hierbei der String ("Private
-	 * Nachricht an" erhält der Text diesen String + den Username, so wird eine
+	 * Message to" erhält der Text diesen String + den Username, so wird eine
 	 * private Nachricht an diesen Usernamen geschickt (funktioniert also auch
 	 * ohne Kommando) Ist der Username nicht vorhanden erhält der User eine
 	 * Nachricht mit "User nicht vorhanden"
+	 * 
+	 * Wird Kommando "/list" ausgeführt, so erhält der Benutzer eine Liste mit allen Benutzern, die zurzeit online sind
 	 * 
 	 */
 	socket.on('chatmessage', function(message) {
 		var usernameTo = "";
 		if (message.startsWith("/")) {
-			var command = message.substring(1, 2);
+			var command = message.substring(1, 5);
 			var available = false;
 			switch (command) {
-			case "w":
-				usernameTo = message.substr(3);
+			case "priv":
+				usernameTo = message.substr(6);
 				// Leerzeichen löschen
 				usernameTo = usernameTo.trim(" ");
 
@@ -129,7 +132,7 @@ io.sockets.on('connection', function(socket) {
 				});
 				available = false;
 				break;
-			case "o":
+			case "list":
 				var userOnline = "";
 				for (var j = 0; j < socketIDs.length; j++) {
 					userOnline += clients[socketIDs[j]] + " ";
@@ -140,8 +143,8 @@ io.sockets.on('connection', function(socket) {
 				break;
 			}
 		} else {
-			if (message.startsWith("Private Message an")) {
-				message = message.replace("Private Message an ", "");
+			if (message.startsWith("Private Message to")) {
+				message = message.replace("Private Message to ", "");
 				usernameTo = message.substring(0, message.lastIndexOf(":"));
 				if (checkUsername(usernameTo, socket) === true) {
 					var tmp = usernameTo + ":";

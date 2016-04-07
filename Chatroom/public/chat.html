@@ -9,11 +9,14 @@
 /*
  * socketio: Verbindung zum Websocket zwischen Client und Server wird aufgerbaut
  */
-	var socketio = io.connect("127.0.0.1:8888");
-	var privateMessage = "Private Message an";
+	var socketio = io.connect("134.103.205.172:8888");
+	var privateMessage = "Private Message to";
 	var privateMsg = false; 
 	window.onload = init;
 
+
+	
+	
 	/*
 	* Username, der auf der Loginseite eingegeben wurde, wird geladen
 	* Chat-Text kann mit der Taste 'Enter' abgeschickt werden
@@ -23,6 +26,7 @@
 	* Hier wird überprüft, ob das Textfeld leer ist. (Wenn der Benutzer keine private Nachricht mehr senden möchte, z.B.)
 	*/
 	function init() {
+		
 		socketio.emit('infoUser', localStorage.getItem('username'));
 		$('.text').keypress(function (e) {
 	        if (e.which == 13) {
@@ -54,6 +58,8 @@
 			+ "] "
 			+ message_to_clients.username
 			+ ': ' + message_to_clients.message + "</li>";
+			
+	window.scrollBy(0,100);
 	});
 	
 	/*
@@ -67,6 +73,7 @@
 
 		var element = document.getElementById("content");
 		element.scrollTop = element.scrollHeight;
+		window.scrollBy(0,100);
 	});
 	
 	/*
