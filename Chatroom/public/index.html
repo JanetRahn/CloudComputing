@@ -5,11 +5,24 @@
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/*
+ * Benachrichtigung wenn ein Benutzername schon vergeben ist
+ * Username wird zum Server geschickt. Dieser überprüft, ob der Name schon vergeben ist
+ * Falls ja, wird ein redirect ausgeführt mit dem Hash-Parameter "Error"
+ * window.onload: Funktion muss beim Laden der Seite aufgerufen, damit überprüft werden kann ob ein Hash mitgeliefert wurde
+ */
 window.onload = function(){
 	if(window.location.hash == '#error'){
 		document.getElementById("notification").style.visibility="visible";
 	}
 }
+
+/*
+ * Wenn der Inhalt der Seite geladen wurde, wird Funktion aufgerufen
+ * Funktion übeprüft, ob Username mindestens 3 Zeichen enthält und keine Leerzeichen
+ * Der Button "Beitreten" wird nur dann aktiv, wenn die Richtlinien erfüllt sind
+ * Funktion kann nach belieben erweitert werden
+ */
 
 $(document).ready(function() {
 	$('#submit').attr("disabled",true);
@@ -29,8 +42,12 @@ $(document).ready(function() {
     	 }
     });
 });
+
+/*
+ * Username wird Clientseitig gespeichert, damit dieser auf der nächsten HTML Seite abgerufen werden kann.
+ */
 function sendMessage() {
-	var test = document.getElementById("username").value;
+	/*var test = document.getElementById("username").value;*/
 	localStorage.setItem('username', document.getElementById('username').value);
 }
 
@@ -47,10 +64,8 @@ body {
 		<h1>Chatroom</h1>
 		<form action="/joinChat" id="form" method="post"
 			onsubmit="sendMessage();">
-			<div id="notification">Username in Verwendung</div>
-			
-			<input type="text" for="username" id="username" name="username" placeholder="Username"/> 
-			
+			<div id="notification">Username in Verwendung</div>		
+			<input type="text" for="username" id="username" name="username" placeholder="Username"/> 		
 			<input	id="submit" type="submit" value="Chat beitreten" />
 			<div id="check"></div>
 		</form>

@@ -88,7 +88,7 @@ io.sockets.on('connection', function(socket) {
 	socket.on('infoUser', function(username) {
 		clients[socket.id] = username;
 		socketIDs = Object.keys(clients);
-		socket.emit('servermessage', 'Welcome to the Chat, ' + username);
+		socket.emit('servermessage', 'Welcome to the Chat, ' + username +"<br> <font color='#7BF954'><i> Info: Um eine private Nachricht zu schreiben, schreibe '/w Username' [Enter], <br> um zu überprüfen wer im Moment online ist, tippe '/o' </i></font>");
 
 		for (var i = 0; i < socketIDs.length; i++) {
 			if (socketIDs[i] !== socket.id) {

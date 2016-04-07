@@ -6,11 +6,22 @@
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+/*
+ * socketio: Verbindung zum Websocket zwischen Client und Server wird aufgerbaut
+ */
 	var socketio = io.connect("127.0.0.1:8888");
 	var privateMessage = "Private Message an";
 	var privateMsg = false; 
 	window.onload = init;
 
+	/*
+	* Username, der auf der Loginseite eingegeben wurde, wird geladen
+	* Chat-Text kann mit der Taste 'Enter' abgeschickt werden
+	* 
+	* Private Nachricht wird mit einer Umrandung des Textfeldes ersichtlich gemacht.
+	* Wird der Text der Privaten Message entfernt, wird die Umrandung wieder entfertn
+	* Hier wird überprüft, ob das Textfeld leer ist. (Wenn der Benutzer keine private Nachricht mehr senden möchte, z.B.)
+	*/
 	function init() {
 		socketio.emit('infoUser', localStorage.getItem('username'));
 		$('.text').keypress(function (e) {
@@ -25,6 +36,10 @@
 		});
 	}
 
+	/*
+	* Nachrichten, die von Clients kommen werden hier mit einem Timestamp sowie den Username von dem die Nachricht kommt, versehen
+	* Darunter zählen: Nachricht an alle und private Nachricht
+	*/
 	socketio.on("message_to_client", function(message_to_clients) {
 	var zeit = new Date(message_to_clients.zeit);
 	document.getElementById("content").innerHTML = (document
@@ -40,6 +55,10 @@
 			+ message_to_clients.username
 			+ ': ' + message_to_clients.message + "</li>";
 	});
+	
+	/*
+	Unterschieden wird zwischen eine Nachricht an alle und einer Servernachricht
+	*/
 
 	socketio.on('servermessage', function(msg) {
 		document.getElementById("content").innerHTML = (document
@@ -49,6 +68,12 @@
 		var element = document.getElementById("content");
 		element.scrollTop = element.scrollHeight;
 	});
+	
+	/*
+	* Nachricht vom Server, der überprüft ob der User online ist, an dem eine private Nachricht gesendet werden möchte
+	* Ist der Benutzer nicht online, wird eine Mitteilung an den Client gesendet
+	* Ist Benutzer online, wird das Textfeld des Clients verändert. Textfeld wird blau umrandet sowie das Textfeld bekommt den Text an wen die Nachricht geht. 
+	*/
 	
 	socketio.on('UserAvailableForPrivateMessage', function(UserAvailableForPrivateMessage){
 		if(UserAvailableForPrivateMessage.available == true && UserAvailableForPrivateMessage.usernameTo !== ""){
@@ -61,6 +86,9 @@
 		}
 	});
 
+	/*
+	* Nachricht wird zum Server geschickt
+	*/
 	function sendMessage() {
 		var msg = document.getElementById("text").value;
 		if(msg != ""){
